@@ -1,8 +1,38 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<polymer-element>
+<polymer-element name="mi-cilindro" attributes="min,max,current, separator">
 	<template>
+		<link rel="stylesheet" href="mi-cilindro.css"/>
+		<div class="franja">
+			<div class="separator">{{separator}}</div>
+			<template repeat="{{number in numbers}}">
+				<div class="number {{number | clase(current)}}">{{number}}</div>
+			</template>
+		</div>
 	</template>
 	<script>
+	Polymer({
+		ready: function (argument) {
+			var numbers = this.numbers = [];
+			for(var i = this.min; i <= this.max; i++){
+				numbers.push(i);
+			}
+		},
+		clase: function (number, current) {
+			var diff = current - number;
+			if (diff == 0) {
+				return 'current';
+			}
+			if ((diff == 1) || (diff == (this.min - this.max))){
+				return 'top';
+			}
+			if ((diff == -1) || (diff == (this.max - this.min))){
+				return 'bottom';
+			}
+			return 'hide';
+
+		}
+
+	})
 	</script>
 </polymer-element>

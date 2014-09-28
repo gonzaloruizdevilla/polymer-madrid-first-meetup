@@ -1,8 +1,45 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/core-ajax/core-ajax.html">
 
-<polymer-element>
+<polymer-element name="mis-relojes">
 	<template>
+		<h1>Relojes</h1>
+		<core-ajax
+			auto
+			handleAs="json"
+			url="/zones.json"
+			on-core-response="{{loadZones}}"></core-ajax>
+		<select on-change="{{add}}">
+			<option>Selecciona zona horaria</option>
+			<option template repeat="{{zone, i in zones}}" value="{{i}}">{{zone.name}}</option>
+		</select>
+		<hr>
+		<table>
+			<tr template repeat="{{zone, i in selectedZones}}" on-click="{{remove}}" data-i="{{i}}">
+				<td>{{zone.name}}</td>
+				<td><mi-reloj offset="{{zone.offset}}"></mi-reloj></td>
+			</tr>
+		</table>
 	</template>
 	<script>
+		function sort(a,b){ return a.name > b.name};
+		Polymer({
+			selectedZones: [],
+			loadZones: function (event, detail, target) {
+				this.zones = detail.response;
+				this.zones.sort(sort);
+			},
+			add: function (event, detail, target){
+				var zone = this.zones.splice(target.value, 1);
+				this.selectedZones.push(zone[0]);
+				this.selectedZones.sort(sort);
+			},
+			remove: function (event, detail, target){
+				var zone = this.selectedZones.splice(target.attributes["data-i"].value, 1);
+				this.zones.push(zone[0]);
+				this.zones.sort(sort);
+			}
+
+		})
 	</script>
 </polymer-element>
