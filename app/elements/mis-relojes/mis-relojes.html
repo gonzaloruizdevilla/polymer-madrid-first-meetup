@@ -24,7 +24,10 @@
 	<script>
 		function sort(a,b){ return a.name > b.name};
 		Polymer({
-			selectedZones: [],
+			created: function () {
+				this.selectedZones = [];
+				this.zones = [];
+			},
 			loadZones: function (event, detail, target) {
 				this.zones = detail.response;
 				this.zones.sort(sort);
